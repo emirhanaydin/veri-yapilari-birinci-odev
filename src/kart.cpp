@@ -7,3 +7,7 @@ Kart::Kart() {
 Kart::~Kart() {
     delete kartSembolu;
 };
+
+Sembol* Kart::alSembol() {
+    return kartSembolu;
+}

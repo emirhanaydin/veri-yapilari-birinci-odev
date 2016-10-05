@@ -3,19 +3,23 @@
 #include <time.h>
 
 Sembol::Sembol() {
+    static bool randBesleme = false;
     static const char karakterler[] = {'a', 'b', 'c', 'd'};
     static const int renkler[] = {14, 4, 5, 2};
 
-    srand(time(NULL));
+    if(!randBesleme) {
+        randBesleme = true;
+        srand(time(0));
+    }
 
     karakter = karakterler[rand() % 4];
     renk = renkler[rand() % 4];
 }
 
-Sembol::alKarakter() {
+char Sembol::alKarakter() {
     return karakter;
 }
 
-Sembol::alRenk() {
+int Sembol::alRenk() {
     return renk;
 }

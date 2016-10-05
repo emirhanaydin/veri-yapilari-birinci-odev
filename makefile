@@ -8,6 +8,7 @@ all: compile
 
 compile: main.o sembol.o kart.o
 	$(CC) $(LIB)/main.o $(LIB)/sembol.o $(LIB)/kart.o -o $(BIN)/main
+	$(BIN)/main.exe
 
 main.o: $(SRC)/main.cpp
 	$(CC) -I $(INCL) -c $(SRC)/main.cpp -o $(LIB)/main.o

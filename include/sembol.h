@@ -10,7 +10,7 @@ public:
 
     int alRenk();
 
-    int alKarakter();
+    char alKarakter();
 };
 
 #endif

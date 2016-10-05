@@ -8,22 +8,41 @@
 */
 
 #include <iostream>
-#include <clocale>
+#include <iomanip>
+#include <windows.h>
+#include <time.h>
 #include "kart.h"
 
 using namespace std;
+
+int konsolGenisligi();
 
 int main() {
     int kartAdedi;
     Kart *kartlar;
 
+    system("CLS");
     cout << "Kart adedi: ";
     cin >> kartAdedi;
+    system("CLS");
+
+    cout << setw(kartAdedi * 4 + 2) << "[ KARTLAR ]" << endl;
+    if (kartAdedi < 2 || kartAdedi > konsolGenisligi() / 8) {
+        return 0;
+    }
     kartlar = new Kart[kartAdedi];
 
     for (int i = 0; i < kartAdedi; i++) {
         cout << i + 1 << "\t";
     }
+    cout << endl;
+    Sembol *sembol;
+    for (int i = 0; i < kartAdedi; i++) {
+        sembol = kartlar[i].alSembol();
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), sembol->alRenk());
+        cout << sembol->alKarakter() << "\t";
+    }
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
 
     cout << endl << endl;
     cout << "Islemler:" << endl;
@@ -33,4 +52,14 @@ int main() {
 
     delete[] kartlar;
     return 0;
+}
+
+int konsolGenisligi() {
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+
+    if (!GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi)) {
+        return -1;
+    } else {
+        return csbi.srWindow.Right - csbi.srWindow.Left;
+    }
 }

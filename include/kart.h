@@ -10,6 +10,8 @@ public:
     Kart();
 
     ~Kart();
+
+    Sembol* alSembol();
 };
 
 #endif

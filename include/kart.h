@@ -5,10 +5,11 @@
 
 class Kart {
 private:
-    int kartSirasi;
-    Sembol* kartSembolu;
+    Sembol *kartSembolu;
 public:
     Kart();
+
+    ~Kart();
 };
 
 #endif

@@ -8,11 +8,29 @@
 */
 
 #include <iostream>
+#include <clocale>
 #include "kart.h"
 
 using namespace std;
 
 int main() {
-    Kart kart();
+    int kartAdedi;
+    Kart *kartlar;
+
     cout << "Kart adedi: ";
+    cin >> kartAdedi;
+    kartlar = new Kart[kartAdedi];
+
+    for (int i = 0; i < kartAdedi; i++) {
+        cout << i + 1 << "\t";
+    }
+
+    cout << endl << endl;
+    cout << "Islemler:" << endl;
+    cout << "1. Kart Degistir" << endl;
+    cout << "2. Ters Cevir" << endl;
+    cout << "3. Cikis" << endl;
+
+    delete[] kartlar;
+    return 0;
 }

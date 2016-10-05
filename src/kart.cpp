@@ -1,7 +1,9 @@
 #include "kart.h"
 
-Kart::Kart(){
-    kartSirasi = 0;
+Kart::Kart() {
     kartSembolu = new Sembol();
-    delete kartSembolu;
 }
+
+Kart::~Kart() {
+    delete kartSembolu;
+};

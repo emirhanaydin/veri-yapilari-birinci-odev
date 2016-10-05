@@ -3,9 +3,14 @@
 
 class Sembol {
 private:
-    char sembol;
+    char karakter;
+    int renk;
 public:
     Sembol();
+
+    int alRenk();
+
+    int alKarakter();
 };
 
 #endif

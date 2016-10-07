@@ -3,12 +3,17 @@ INCL=./include
 SRC=./src
 LIB=./lib
 BIN=./bin
+EXE=main
 
-all: compile
+all: gen-libs compile run
 
-compile: main.o sembol.o kart.o
-	$(CC) $(LIB)/main.o $(LIB)/sembol.o $(LIB)/kart.o -o $(BIN)/main
-	$(BIN)/main.exe
+gen-libs: main.o sembol.o kart.o
+
+compile:
+	$(CC) $(LIB)/main.o $(LIB)/sembol.o $(LIB)/kart.o -o $(BIN)/$(EXE)
+	
+run: 
+	$(BIN)/$(EXE).exe
 
 main.o: $(SRC)/main.cpp
 	$(CC) -I $(INCL) -c $(SRC)/main.cpp -o $(LIB)/main.o
@@ -18,3 +23,7 @@ sembol.o: $(SRC)/sembol.cpp
 
 kart.o: $(SRC)/kart.cpp
 	$(CC) -I $(INCL) -c $(SRC)/kart.cpp -o $(LIB)/kart.o
+	
+clean:
+	del "$(BIN)\$(EXE).exe"
+	del "$(LIB)\*.o"

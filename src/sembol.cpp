@@ -5,7 +5,7 @@
 Sembol::Sembol() {
     static bool randBesleme = false;
     static const char karakterler[] = {'a', 'b', 'c', 'd'};
-    static const int renkler[] = {14, 4, 5, 2};
+    static const int renkler[] = {14, 12, 13, 10};
 
     if(!randBesleme) {
         randBesleme = true;

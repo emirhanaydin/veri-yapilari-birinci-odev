@@ -7,7 +7,7 @@ Sembol::Sembol() {
     static const char karakterler[] = {'a', 'b', 'c', 'd'};
     static const int renkler[] = {14, 12, 13, 10};
 
-    if(!randBesleme) {
+    if (!randBesleme) {
         randBesleme = true;
         srand(time(0));
     }

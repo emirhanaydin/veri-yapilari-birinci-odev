@@ -1,5 +1,5 @@
-#ifndef KART_HPP
-#define KART_HPP
+#ifndef KART_H
+#define KART_H
 
 #include "sembol.h"
 
@@ -11,7 +11,7 @@ public:
 
     ~Kart();
 
-    Sembol* alSembol();
+    Sembol *alSembol();
 };
 
 #endif

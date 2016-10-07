@@ -8,6 +8,6 @@ Kart::~Kart() {
     delete kartSembolu;
 };
 
-Sembol* Kart::alSembol() {
+Sembol *Kart::alSembol() {
     return kartSembolu;
 }

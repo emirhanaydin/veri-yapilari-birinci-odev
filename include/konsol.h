@@ -7,13 +7,15 @@ private:
 public:
     static int alKonsolGenisligi();
 
-    static void imleciGoster(bool);
+    static void imleciGoster(bool = true);
 
     static void imleciTasi(int, int);
 
     static int alImlecX();
 
     static int alImlecY();
+
+    static void yaziRengi(int = 7);
 };
 
 #endif

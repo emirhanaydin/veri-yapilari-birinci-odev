@@ -63,3 +63,11 @@ int Konsol::alImlecY() {
         return -1;
     return csbi.dwCursorPosition.Y;
 }
+
+/**
+ * Konsolun metin rengini ayarlamaya yarar.
+ * @param renk Atanacak olan rengin tam sayı kodu.
+ */
+void Konsol::yaziRengi(int renk) {
+    SetConsoleTextAttribute(konsol, renk);
+}

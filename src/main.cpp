@@ -8,10 +8,9 @@
 */
 
 #include <iostream>
-#include <iomanip>
-#include <windows.h>
-#include <time.h>
-#include <conio.h>
+#include <iomanip> // setw fonksiyonu.
+#include <windows.h> // system fonksiyonu
+#include <conio.h> // getch fonksiyonu
 #include "kart.h"
 #include "konsol.h"
 
@@ -20,6 +19,12 @@ using namespace std;
 int main() {
     int kartAdedi;
     Kart *kartlar;
+
+    const int secenekSay = 3;
+    string secenekler[secenekSay] = {"Kartlarin Yerlerini Degistir",
+                                     "Kartlari Ters Cevir",
+                                     "Cikis"};
+    int seciliSecenek = 0;
 
     Konsol::imleciGoster(0);
 
@@ -30,7 +35,7 @@ int main() {
 //        Konsol genişliği değerinin alınması esnasında bir hata meydana gelmişse program sonlandırılır.
         if (genislik < 0) {
             cerr << "Konsol penceresinin genisligi alinamiyor. Program sonlandirilacak.";
-            return EXIT_FAILURE;
+            return 1;
         }
         system("CLS");
         if (hataliAdet) cout << "Kart adedi 2 ile " << genislik << " araliginda olmalidir." << endl;
@@ -55,19 +60,29 @@ int main() {
         Sembol *sembol;
         for (int i = 0; i < kartAdedi; i++) {
             sembol = kartlar[i].alSembol();
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), sembol->alRenk());
+            Konsol::yaziRengi(sembol->alRenk());
             cout << sembol->alKarakter() << "\t";
         }
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 7);
-
+        Konsol::yaziRengi();
         cout << endl << endl;
-        cout << "Islemler:" << endl;
-        cout << "> 1. Kart Degistir" << endl;
-        cout << "  2. Ters Cevir" << endl;
-        cout << "  3. Cikis" << endl;
+
+//        Menü seçenekleri yazdırılır.
+        for (int i = 0; i < secenekSay; i++) {
+            if (i == seciliSecenek) {
+                Konsol::yaziRengi(15);
+                cout << "> " << secenekler[i] << (i < secenekSay - 1 ? "\n" : "");
+                Konsol::yaziRengi();
+                continue;
+            }
+            cout << "  " << secenekler[i] << (i < secenekSay - 1 ? "\n" : "");
+        }
+
         secim = getch();
+        if (secim == 'd' && seciliSecenek < secenekSay - 1) seciliSecenek++;
+        else if (secim == 'a' && seciliSecenek > 0) seciliSecenek--;
     } while (secim != 'c'); // Ana menü sonu
 
     delete[] kartlar;
+    Konsol::imleciGoster();
     return 0;
 }

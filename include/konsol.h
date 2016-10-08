@@ -16,6 +16,8 @@ public:
     static int alImlecY();
 
     static void yaziRengi(int = 7);
+
+    static void satiriDoldur(char, int = -1);
 };
 
 #endif

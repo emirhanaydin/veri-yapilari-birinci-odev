@@ -16,15 +16,19 @@
 
 using namespace std;
 
+void anaMenuYazdir(string secenekler[], int secenekSayisi, int secenek);
+
+void anaMenuSecimi(string[], int, int &);
+
 int main() {
     int kartAdedi;
     Kart *kartlar;
 
-    const int secenekSay = 3;
-    string secenekler[secenekSay] = {"Kartlarin Yerlerini Degistir",
-                                     "Kartlari Ters Cevir",
-                                     "Cikis"};
-    int seciliSecenek = 0;
+    const int secenekSayisi = 3;
+    string secenekler[secenekSayisi] = {"Kartlarin Yerlerini Degistir",
+                                        "Kartlari Ters Cevir",
+                                        "Cikis"};
+    int secenek = 0;
 
     Konsol::imleciGoster(0);
 
@@ -47,42 +51,112 @@ int main() {
 
     kartlar = new Kart[kartAdedi];
 
-    char secim;
+    int secim;
 
     do { // Ana menü
         system("CLS");
-        cout << setw(kartAdedi * 4 + 2) << "[ KARTLAR ]" << endl;
+        cout << setw(kartAdedi * 4 - 6) << " " << "[ KARTLAR ]" << endl;
 
         for (int i = 0; i < kartAdedi; i++) {
-            cout << i + 1 << "\t";
+            cout << "[  " << left << setw(2) << i + 1 << "  ]";
         }
         cout << endl;
         Sembol *sembol;
         for (int i = 0; i < kartAdedi; i++) {
             sembol = kartlar[i].alSembol();
             Konsol::yaziRengi(sembol->alRenk());
-            cout << sembol->alKarakter() << "\t";
+            cout << "  |" << sembol->alKarakter() << setw(4) << "|";
         }
         Konsol::yaziRengi();
         cout << endl << endl;
 
-//        Menü seçenekleri yazdırılır.
-        for (int i = 0; i < secenekSay; i++) {
-            if (i == seciliSecenek) {
-                Konsol::yaziRengi(15);
-                cout << "> " << secenekler[i] << (i < secenekSay - 1 ? "\n" : "");
-                Konsol::yaziRengi();
-                continue;
-            }
-            cout << "  " << secenekler[i] << (i < secenekSay - 1 ? "\n" : "");
-        }
+//        Ana menü seçenekleri yazdırılır.
+        anaMenuYazdir(secenekler, secenekSayisi, secenek);
 
-        secim = getch();
-        if (secim == 'd' && seciliSecenek < secenekSay - 1) seciliSecenek++;
-        else if (secim == 'a' && seciliSecenek > 0) seciliSecenek--;
-    } while (secim != 'c'); // Ana menü sonu
+//        Ana menü fonksiyonları üzerinde dinamik olarak seçim yapabilmeyi sağlayan fonksiyon.
+        anaMenuSecimi(secenekler, secenekSayisi, secenek);
+
+    } while (secenek != 2); // Ana menü sonu
 
     delete[] kartlar;
     Konsol::imleciGoster();
     return 0;
+}
+
+void anaMenuYazdir(string secenekler[], int secenekSayisi, int secenek) {
+//    Gönderilen seçenek değerinin gereken aralıkta olup olmadığı denetlenir.
+    if (secenek < 0) secenek = 0;
+    else if (secenek >= secenekSayisi) secenek = secenekSayisi - 1;
+//    İlk olarak menü seçenekleri yazdırılır.
+    for (int i = 0; i < secenekSayisi; i++) {
+        if (i == secenek) {
+            Konsol::yaziRengi(15);
+            cout << "> " << secenekler[i] << (i < secenekSayisi - 1 ? "\n" : "");
+            Konsol::yaziRengi();
+            continue;
+        }
+        cout << "  " << secenekler[i] << (i < secenekSayisi - 1 ? "\n" : "");
+    }
+}
+
+/**
+ * Ana menü seçim fonksiyonu.
+ * @param secenekler Seçenekleri barındıran metin dizisi.
+ * @param secenekSayisi Toplam seçenek sayısı.
+ * @param secenek Seçilmiş olan seçeneği döndürmek için kullanılan referans.
+ */
+void anaMenuSecimi(string secenekler[], int secenekSayisi, int &secenek) {
+    int imlecY = Konsol::alImlecY() - (secenekSayisi - secenek - 1);
+    char secim;
+    int fark;
+    bool cikis = false;
+
+    Konsol::imleciTasi(0, imlecY);
+    do { // Seçim döngüsü
+        secim = getch();
+        fark = 0;
+
+        switch (secim) {
+            case 72: // Yukarı ok tuşu
+                if (secenek > 0)
+                    fark = -1;
+                break;
+            case 80: // Aşağı ok tuşu
+                if (secenek < secenekSayisi - 1)
+                    fark = 1;
+                break;
+            case 13: // CR karakteri, Enter tuşunu yakalamak için.
+                cikis = true;
+                break;
+        }
+        if (cikis) break;
+        if (fark == 0) continue;
+        secenek += fark;
+
+//        İmleci bir önceki seçeneğin başına taşı.
+        Konsol::imleciTasi(0, imlecY);
+//        Satırda yer alan seçeneği boş karakteri satır boyunca doldurarak sil.
+        Konsol::satiriDoldur(' ', 0);
+//        İmleci tekrar satır başına al.
+        Konsol::imleciTasi(0, imlecY);
+//        Yazma rengi varsayılan olarak ayarlanır.
+        Konsol::yaziRengi();
+//        Önceki seçenek işaret karakteri, '>' olmadan ve varsayılan renkte tekrar yazdırılır.
+        cout << "  " << secenekler[secenek - fark];
+
+//        İmleç konumu olarak sonraki, yeni seçeneğin konumu alınır.
+        imlecY += fark;
+//        İmleci yeni atanan konuma taşı.
+        Konsol::imleciTasi(0, imlecY);
+//        Satırda yer alan seçeneği boş karakteri satır boyunca doldurarak sil.
+        Konsol::satiriDoldur(' ', 0);
+//        İmleci tekrar satır başına al.
+        Konsol::imleciTasi(0, imlecY);
+//        Yazma rengini beyaz olarak ayarla, aktif seçenek görünümü için.
+        Konsol::yaziRengi(15);
+//        Mevcut seçenek işaret karakteri, '>' ile yazdırılır.
+        cout << "> " << secenekler[secenek];
+//        Yazma rengi tekrardan varsayılan renge ayarlanır.
+        Konsol::yaziRengi();
+    } while (true); // Seçim döngüsü sonu
 }

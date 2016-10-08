@@ -1,3 +1,4 @@
+#include <iostream>
 #include <windows.h>
 #include "konsol.h"
 
@@ -70,4 +71,19 @@ int Konsol::alImlecY() {
  */
 void Konsol::yaziRengi(int renk) {
     SetConsoleTextAttribute(konsol, renk);
+}
+
+/**
+ * İmlecin şu anki yatay pozisyonundan satır sonuna kadar aynı karakteri basar.
+ * @param karakter Basılacak olan karakter.
+ * @param baslangic Başlangıç pozisyonu. Eğer verilmezse mevcut konumdan başlar.
+ */
+void Konsol::satiriDoldur(char karakter, int baslangic) {
+    if (baslangic < 0)
+        baslangic = Konsol::alImlecX();
+    else
+        Konsol::imleciTasi(baslangic, Konsol::alImlecY());
+    int uzunluk = Konsol::alKonsolGenisligi() - baslangic;
+    for (int i = 0; i < uzunluk; i++)
+        std::cout << karakter;
 }

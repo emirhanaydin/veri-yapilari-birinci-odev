@@ -11,7 +11,11 @@ public:
 
     ~Kart();
 
+    Kart &operator=(const Kart &);
+
     Sembol *alSembol();
+
+    void semboluBirak();
 };
 
 #endif

@@ -16,11 +16,17 @@
 
 using namespace std;
 
-void anaMenuYazdir(string secenekler[], int secenekSayisi, int secenek);
+void kartAdediAl(int &);
+
+void anaMenuYazdir(string[], int, int);
 
 void anaMenuSecimi(string[], int, int &);
 
+void kartlariTersCevir(Kart[], int);
+
 int main() {
+    system("color 7"); // Konsol rengini siyah arkaplan üzerine beyaz olacak şekilde ayarlar.
+
     int kartAdedi;
     Kart *kartlar;
 
@@ -68,13 +74,15 @@ int main() {
             cout << "  |" << sembol->alKarakter() << setw(4) << "|";
         }
         Konsol::yaziRengi();
-        cout << endl << endl;
+        cout << endl << endl << endl;
 
 //        Ana menü seçenekleri yazdırılır.
         anaMenuYazdir(secenekler, secenekSayisi, secenek);
 
 //        Ana menü fonksiyonları üzerinde dinamik olarak seçim yapabilmeyi sağlayan fonksiyon.
         anaMenuSecimi(secenekler, secenekSayisi, secenek);
+
+        if (secenek == 1) kartlariTersCevir(kartlar, kartAdedi);
 
     } while (secenek != 2); // Ana menü sonu
 
@@ -83,6 +91,31 @@ int main() {
     return 0;
 }
 
+void kartAdediAl(int &kartAdedi) {
+    int genislik; // Konsol penceresinin genişliğinin 8'de biri değerini tutar. Döngü içinde değer atanır.
+    bool hataliAdet = false;
+    do { // Kart adedi al
+        genislik = Konsol::alKonsolGenisligi() / 8;
+//        Konsol genişliği değerinin alınması esnasında bir hata meydana gelmişse program sonlandırılır.
+        if (genislik < 0) {
+            cerr << "Konsol penceresinin genisligi alinamiyor. Program sonlandirilacak.";
+            return 1;
+        }
+        system("CLS");
+        if (hataliAdet) cout << "Kart adedi 2 ile " << genislik << " araliginda olmalidir." << endl;
+        cout << "Kart adedi: ";
+        cin >> kartAdedi;
+//        Eğer kart adedi gereken aralıkta değilse döngü başa sarılır.
+        hataliAdet = kartAdedi < 2 || kartAdedi > genislik;
+    } while (hataliAdet); // Kart adedi al sonu
+}
+
+/**
+ * Ana menü seçeneklerini yazdıran fonksiyon.
+ * @param secenekler Seçenekleri barındıran metin dizisi.
+ * @param secenekSayisi Toplam seçenek sayısı.
+ * @param secenek Seçilmiş olan seçeneği döndürmek için kullanılan referans.
+ */
 void anaMenuYazdir(string secenekler[], int secenekSayisi, int secenek) {
 //    Gönderilen seçenek değerinin gereken aralıkta olup olmadığı denetlenir.
     if (secenek < 0) secenek = 0;
@@ -159,4 +192,15 @@ void anaMenuSecimi(string secenekler[], int secenekSayisi, int &secenek) {
 //        Yazma rengi tekrardan varsayılan renge ayarlanır.
         Konsol::yaziRengi();
     } while (true); // Seçim döngüsü sonu
+}
+
+void kartlariTersCevir(Kart kartlar[], int kartAdedi) {
+    Kart *gecici = new Kart();
+    for (int i = 0, j = kartAdedi - 1, bitis = kartAdedi / 2; i < bitis; i++, j--) {
+        *gecici = kartlar[i];
+        kartlar[i] = kartlar[j];
+        kartlar[j] = *gecici;
+    }
+    gecici->semboluBirak();
+    delete gecici;
 }

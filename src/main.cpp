@@ -16,7 +16,7 @@
 
 using namespace std;
 
-void kartAdediAl(int &);
+void kartAdediAl(int &, string &);
 
 void anaMenuYazdir(string[], int, int);
 
@@ -28,36 +28,26 @@ int main() {
     system("color 7"); // Konsol rengini siyah arkaplan üzerine beyaz olacak şekilde ayarlar.
 
     int kartAdedi;
+    string hata;
+
+    kartAdediAl(kartAdedi, hata);
+    if (hata != "") {
+        cerr << hata;
+        return 1;
+    }
+
     Kart *kartlar;
+    kartlar = new Kart[kartAdedi];
 
     const int secenekSayisi = 3;
     string secenekler[secenekSayisi] = {"Kartlarin Yerlerini Degistir",
                                         "Kartlari Ters Cevir",
                                         "Cikis"};
+
+    int secim;
     int secenek = 0;
 
     Konsol::imleciGoster(0);
-
-    int genislik; // Konsol penceresinin genişliğinin 8'de biri değerini tutar. Döngü içinde değer atanır.
-    bool hataliAdet = false;
-    do { // Kart adedi al
-        genislik = Konsol::alKonsolGenisligi() / 8;
-//        Konsol genişliği değerinin alınması esnasında bir hata meydana gelmişse program sonlandırılır.
-        if (genislik < 0) {
-            cerr << "Konsol penceresinin genisligi alinamiyor. Program sonlandirilacak.";
-            return 1;
-        }
-        system("CLS");
-        if (hataliAdet) cout << "Kart adedi 2 ile " << genislik << " araliginda olmalidir." << endl;
-        cout << "Kart adedi: ";
-        cin >> kartAdedi;
-//        Eğer kart adedi gereken aralıkta değilse döngü başa sarılır.
-        hataliAdet = kartAdedi < 2 || kartAdedi > genislik;
-    } while (hataliAdet); // Kart adedi al sonu
-
-    kartlar = new Kart[kartAdedi];
-
-    int secim;
 
     do { // Ana menü
         system("CLS");
@@ -91,20 +81,55 @@ int main() {
     return 0;
 }
 
-void kartAdediAl(int &kartAdedi) {
+/**
+ * Kullanıcıdan basılacak olan kart adedini alır.
+ * @param kartAdedi Döndürülecek olan kart adedi.
+ * @param hata Hata durumunda döndürülecek olan hata mesajı.
+ */
+void kartAdediAl(int &kartAdedi, string &hata) {
+    hata = "";
+    kartAdedi = 0;
     int genislik; // Konsol penceresinin genişliğinin 8'de biri değerini tutar. Döngü içinde değer atanır.
     bool hataliAdet = false;
     do { // Kart adedi al
         genislik = Konsol::alKonsolGenisligi() / 8;
 //        Konsol genişliği değerinin alınması esnasında bir hata meydana gelmişse program sonlandırılır.
         if (genislik < 0) {
-            cerr << "Konsol penceresinin genisligi alinamiyor. Program sonlandirilacak.";
-            return 1;
+            hata = "Konsol penceresinin genisligi alinamiyor. Program sonlandirilacak.";
+            return;
         }
         system("CLS");
-        if (hataliAdet) cout << "Kart adedi 2 ile " << genislik << " araliginda olmalidir." << endl;
+        if (hataliAdet) cout << "Kart adedi 2 ile " << genislik << " araliginda olmalidir." << endl << endl;
         cout << "Kart adedi: ";
-        cin >> kartAdedi;
+//        Aşağıdaki yapı basılan karakteri önce getch ile okumak, daha sonra ekrana yazdırmak ve enter tuşu basıldığında
+//        girilen sayının tamamını int değere atamak için yapılmıştır. Burada amaç yalnızca istenilen formatta, sayı
+//        karakterleri girilebilmesini sağlamaktır.
+        char yazilan; // Getch ile okunan değer buna atanır.
+        char sayi[2]; // Girilen karakter sayı ise bu diziye atanır. En fazla 2 haneli olabileceğinden 2 uzunluğundadır.
+        int karSayisi = 0; // Diziye adres vermek ve en az 1 adet sayı girildiğinden emin olabilmek için kullanılır.
+        do { // Karakter oku
+            yazilan = _getch();
+            if (karSayisi == 0 && yazilan == '0') continue; // Eğer ilk karakter olarak 0 girilmişse kabul edilmez.
+//            Eğer girilen karakter bir sayı ise kabul edilir.
+            if (karSayisi < 2 && yazilan >= '0' && yazilan <= '9') {
+//                Sayı ekrana yazdırılır ve bu sayede kullanıcı tarafından doğrudan yazdırılmış izlenimi verilir.
+                cout << yazilan;
+                sayi[karSayisi++] = yazilan;
+            }
+//            Eğer 8 kodlu karater (BACKSPACE) basılırsa son girilen karakter silinir.
+            if (karSayisi > 0 && yazilan == 8) {
+                karSayisi--;
+                cout << yazilan;
+                cout << " ";
+                cout << yazilan;
+            }
+        } while (!(yazilan == 13 && karSayisi > 0)); // Karakter oku sonu
+//        Dizide tutulan sayılar, blok sonunda bellekte kalacak olan kart adedi değişkenine atanır.
+        kartAdedi = (sayi[0] - '0');
+        if (karSayisi > 1) {
+            kartAdedi *= 10; // Eğer sayı iki haneliyse ilk girilen onlar basamağı olarak kabul edilir.
+            kartAdedi += sayi[1] - '0';
+        }
 //        Eğer kart adedi gereken aralıkta değilse döngü başa sarılır.
         hataliAdet = kartAdedi < 2 || kartAdedi > genislik;
     } while (hataliAdet); // Kart adedi al sonu
@@ -146,7 +171,7 @@ void anaMenuSecimi(string secenekler[], int secenekSayisi, int &secenek) {
 
     Konsol::imleciTasi(0, imlecY);
     do { // Seçim döngüsü
-        secim = getch();
+        secim = _getch();
         fark = 0;
 
         switch (secim) {
@@ -194,13 +219,21 @@ void anaMenuSecimi(string secenekler[], int secenekSayisi, int &secenek) {
     } while (true); // Seçim döngüsü sonu
 }
 
+/**
+ * Gönderilen Kart dizisini tersler.
+ * @param kartlar Terslenecek olan Kart dizisi.
+ * @param kartAdedi Kart dizisi uzunluğu.
+ */
 void kartlariTersCevir(Kart kartlar[], int kartAdedi) {
     Kart *gecici = new Kart();
+//    Oluşturulan geçici Kart nesnesi kullanılarak basit bir tersleme algoritması ile dizi terslenir.
     for (int i = 0, j = kartAdedi - 1, bitis = kartAdedi / 2; i < bitis; i++, j--) {
         *gecici = kartlar[i];
         kartlar[i] = kartlar[j];
         kartlar[j] = *gecici;
     }
+//    Geçici kart nesnesinin gösterdiği Sembol nesnesi en dizide en son okunan kart nesnesinin Sembol nesnesi
+//    olacağından kart silinmeden önce bu Sembol ile bağlantısı kesilir. Bu sayede kart silinirken bu sembolü de silmez.
     gecici->semboluBirak();
     delete gecici;
 }

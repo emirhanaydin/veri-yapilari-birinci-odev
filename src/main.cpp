@@ -22,6 +22,8 @@ void anaMenuYazdir(string[], int, int);
 
 void anaMenuSecimi(string[], int, int &);
 
+void kartYerDegistir(Kart[], int);
+
 void kartlariTersCevir(Kart[], int);
 
 int main() {
@@ -72,6 +74,7 @@ int main() {
 //        Ana menü fonksiyonları üzerinde dinamik olarak seçim yapabilmeyi sağlayan fonksiyon.
         anaMenuSecimi(secenekler, secenekSayisi, secenek);
 
+        if (secenek == 0) kartYerDegistir(kartlar, kartAdedi);
         if (secenek == 1) kartlariTersCevir(kartlar, kartAdedi);
 
     } while (secenek != 2); // Ana menü sonu
@@ -219,6 +222,68 @@ void anaMenuSecimi(string secenekler[], int secenekSayisi, int &secenek) {
     } while (true); // Seçim döngüsü sonu
 }
 
+void kartYerDegistir(Kart kartlar[], int kartAdedi) {
+    int kaynak, hedef;
+    int secenekY = Konsol::alImlecY();
+    char secimKar = 94;
+    char secim;
+    int konum = 0;
+    int isaretciY = 3;
+    int isaretciX = 3;
+    int fark = 0;
+
+    Konsol::imleciTasi(0, secenekY);
+    cout << "  ";
+
+    Konsol::imleciTasi(3, isaretciY);
+    Konsol::yaziRengi(15);
+    cout << secimKar;
+
+    Konsol::imleciTasi(isaretciX - 3, isaretciY - 2);
+    cout << "        ";
+    for (int i = 0; i < 8; i++) cout << char(8);
+    cout << "[  " << left << setw(2) << konum + 1 << "  ]";
+
+    do {
+        fark = 0;
+
+        switch ((secim = _getch())) {
+            case 77: // Sağ yön tuşu
+                if (konum < kartAdedi - 1)
+                    fark = 1;
+                break;
+            case 75: // Sol yön tuşu
+                if (konum > 0)
+                    fark = -1;
+                break;
+        }
+        if (fark == 0) continue;
+//        Bir önceki konumdan gösterici karakteri silinir.
+        Konsol::imleciTasi(isaretciX, isaretciY);
+        cout << " ";
+//        Bir önce konumun kart başlığının rengini varsayılana döndürülür.
+        Konsol::imleciTasi(isaretciX - 3, isaretciY - 2);
+        Konsol::yaziRengi();
+        cout << "        ";
+        for (int i = 0; i < 8; i++) cout << char(8);
+        cout << "[  " << left << setw(2) << konum + 1 << "  ]";
+
+        konum += fark;
+        isaretciX += fark * 8;
+//        Yeni konumda gösterici karakteri çizilir.
+        Konsol::imleciTasi(isaretciX, isaretciY);
+        Konsol::yaziRengi(15);
+        cout << secimKar;
+//        Yeni konumun kart başlığının rengi değiştirilir.
+        Konsol::imleciTasi(isaretciX - 3, isaretciY - 2);
+        cout << "        ";
+        for (int i = 0; i < 8; i++) cout << char(8);
+        cout << "[  " << left << setw(2) << konum + 1 << "  ]";
+    } while (secim != 13);
+
+    Konsol::yaziRengi();
+}
+
 /**
  * Gönderilen Kart dizisini tersler.
  * @param kartlar Terslenecek olan Kart dizisi.
@@ -232,7 +297,7 @@ void kartlariTersCevir(Kart kartlar[], int kartAdedi) {
         kartlar[i] = kartlar[j];
         kartlar[j] = *gecici;
     }
-//    Geçici kart nesnesinin gösterdiği Sembol nesnesi en dizide en son okunan kart nesnesinin Sembol nesnesi
+//    Geçici kart nesnesinin gösterdiği Sembol nesnesi dizide en son okunan kart nesnesinin Sembol nesnesi
 //    olacağından kart silinmeden önce bu Sembol ile bağlantısı kesilir. Bu sayede kart silinirken bu sembolü de silmez.
     gecici->semboluBirak();
     delete gecici;

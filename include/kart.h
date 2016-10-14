@@ -15,7 +15,7 @@ public:
 
     Sembol *alSembol();
 
-    void semboluBirak();
+    void serbestBirak();
 };
 
 #endif

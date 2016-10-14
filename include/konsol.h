@@ -17,7 +17,7 @@ public:
 
     static void yaziRengi(int = 7);
 
-    static void satiriDoldur(char, int = -1);
+    static void satiriDoldur(char, int = -1, int = -1, bool = true, int = -1);
 };
 
 #endif

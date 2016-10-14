@@ -37,9 +37,12 @@ void Konsol::imleciGoster(bool gorunur) {
  * @param y İmlecin dikeydeki konumu.
  */
 void Konsol::imleciTasi(int x, int y) {
+    int konumX = x < 0 ? Konsol::alImlecX() : x;
+    int konumY = y < 0 ? Konsol::alImlecY() : y;
+
     COORD coord;
-    coord.X = x;
-    coord.Y = y;
+    coord.X = konumX;
+    coord.Y = konumY;
     SetConsoleCursorPosition(konsol, coord);
 }
 
@@ -76,14 +79,23 @@ void Konsol::yaziRengi(int renk) {
 /**
  * İmlecin şu anki yatay pozisyonundan satır sonuna kadar aynı karakteri basar.
  * @param karakter Basılacak olan karakter.
- * @param baslangic Başlangıç pozisyonu. Eğer verilmezse mevcut konumdan başlar.
+ * @param x Başlangıçtaki yatay konum. Eğer verilmezse o anki konumdan başlar.
+ * @param y Gidilecek olan dikey konum. Eğer verilmezse o anki konum kabul edilir.
+ * @param geriyeDon Satır doldurulduktan sonra tekrar başlangıç pozisyonuna dönülsün mü?
+ * @param uzunluk Kaç adet karakter basılacağını belirtir. Varsayılan değerinde bırakılırsa satır sonuna kadar basılır.
  */
-void Konsol::satiriDoldur(char karakter, int baslangic) {
-    if (baslangic < 0)
-        baslangic = Konsol::alImlecX();
-    else
-        Konsol::imleciTasi(baslangic, Konsol::alImlecY());
-    int uzunluk = Konsol::alKonsolGenisligi() - baslangic;
-    for (int i = 0; i < uzunluk; i++)
+void Konsol::satiriDoldur(char karakter, int x, int y, bool geriyeDon, int uzunluk) {
+    int konumX = x < 0 ? Konsol::alImlecX() : x;
+    int konumY = y < 0 ? Konsol::alImlecY() : y;
+
+    Konsol::imleciTasi(konumX, konumY);
+
+    int karAdedi = Konsol::alKonsolGenisligi() - konumX;
+    if (uzunluk >= 0 && uzunluk < karAdedi)
+        karAdedi = uzunluk;
+    for (int i = 0; i < karAdedi; i++)
         std::cout << karakter;
+    if (geriyeDon) {
+        Konsol::imleciTasi(konumX, konumY);
+    }
 }

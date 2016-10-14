@@ -18,6 +18,6 @@ Sembol *Kart::alSembol() {
     return kartSembolu;
 }
 
-void Kart::semboluBirak() {
+void Kart::serbestBirak() {
     kartSembolu = 0;
 }

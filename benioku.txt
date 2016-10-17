@@ -1,0 +1,11 @@
+Programýn son hali, g++ (GCC) 5.3.0 ile makefile üzerinden hatasýz bir 
+biçimde derlenmiþ ve çalýþtýrýlmýþtýr.
+
+Program, dokümanda istenilenleri eksiksiz biçimde yerine getirmektedir.
+Bununla beraber tasarým ve güvenilirlik konusunda, istenilen yapýya da sadýk
+kalýnarak geliþtirilmeler yapýlmýþtýr.
+
+Detaylar hakkýnda bilgi almak için raporu inceleyiniz.
+Programýn iþleyiþi ile ilgili detaylarý kodlarý inceleyerek öðrenebilirsiniz.
+Kod dosyalarýnýn; sade, tekrarsýz ve yorum satýrlarýyla iyi açýklanmýþ olmasýna
+özen gösterilmiþtir.

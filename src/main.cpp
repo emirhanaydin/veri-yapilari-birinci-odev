@@ -1,6 +1,7 @@
 /**
-* @file Main.cpp
-* @description Programınızın açıklaması ne yaptığına dair.
+* @file main.cpp
+* @description Kart dizisi üzerinde işlemlerin yapıldığı, kullanıcının gerçek zamanlı olarak etkileşime geçebileceği
+ * seçenek yapısının tanımlandığı programın kaynak dosyası.
 * @course 2A
 * @assignment 1
 * @date 5.10.2016
@@ -19,6 +20,10 @@ using namespace std;
 void kartAdediAl(int &, string &);
 
 void anaMenuYazdir(string[], int, int);
+
+void menuBilgiYazdir(string[], int);
+
+void menuBilgiSil(int);
 
 void dikeySecim(string[], int, int &);
 
@@ -74,12 +79,25 @@ int main() {
 //        Ana menü seçenekleri yazdırılır.
         anaMenuYazdir(secenekler, secenekSayisi, secenek);
 
+        string menuBilgi[] = {"Secim yapmak icin yukari, asagi yon tuslarini kullaniniz.",
+                              "Seciminizi onaylamak icin ENTER tusuna basiniz."};
+
+        menuBilgiYazdir(menuBilgi, 2);
+
 //        Ana menü fonksiyonları üzerinde dinamik olarak seçim yapabilmeyi sağlayan fonksiyon.
         dikeySecim(secenekler, secenekSayisi, secenek);
 
-        if (secenek == 0) kartYerDegistir(kartlar, kartAdedi); // Kartların yerini değiştir
-        else if (secenek == 1) kartlariTersCevir(kartlar, kartAdedi); // Kartları ters çevir
-        else if (secenek == 2) { // Çıkış
+        menuBilgiSil(2);
+
+        if (secenek == 0) { // Kartların yerini değiştir
+            string menuBilgi[] = {"Secim yapmak icin saga, sola yon tuslarini kullaniniz.",
+                                  "Seciminizi onaylamak icin ENTER tusuna basiniz."};
+            menuBilgiYazdir(menuBilgi, 2);
+            kartYerDegistir(kartlar, kartAdedi);
+            menuBilgiSil(2);
+        } else if (secenek == 1) { // Kartları ters çevir
+            kartlariTersCevir(kartlar, kartAdedi);
+        } else if (secenek == 2) { // Çıkış
             Konsol::imleciTasi(0, -1);
             cout << "  ";
             Konsol::imleciTasi(2, 9);
@@ -170,6 +188,20 @@ void anaMenuYazdir(string secenekler[], int secenekSayisi, int secenek) {
             continue;
         }
         cout << "  " << secenekler[i] << (i < secenekSayisi - 1 ? "\n" : "");
+    }
+}
+
+void menuBilgiYazdir(string bilgilendirme[], int satirSayisi) {
+    Konsol::imleciTasi(0, 9);
+    for (int i = 0; i < satirSayisi; i++) {
+        cout << "  " << bilgilendirme[i] << (i < satirSayisi - 1 ? "\n" : "");
+    }
+    Konsol::imleciTasi(0, 7);
+}
+
+void menuBilgiSil(int satirSayisi) {
+    for (int i = 0; i < satirSayisi; i++) {
+        Konsol::satiriDoldur(' ', 0, 9 + i);
     }
 }
 
@@ -319,10 +351,11 @@ void kartYerDegistir(Kart kartlar[], int kartAdedi) {
     int ilkSecim, ikinciSecim;
 
     kartYeriSec(kartlar, kartAdedi, ilkSecim);
-    Konsol::imleciTasi(0, 10);
+    menuBilgiSil(2);
+    Konsol::imleciTasi(0, 9);
     cout << "  " << ilkSecim + 1 << ". karti sectiniz. Yer degistirmek istediginiz karti seciniz.";
     kartYeriSec(kartlar, kartAdedi, ikinciSecim, ilkSecim);
-    Konsol::satiriDoldur(' ', 0, 10, true);
+    Konsol::satiriDoldur(' ', 0, 9, true);
     cout << "  " << ilkSecim + 1 << ". kart ile " << ikinciSecim + 1
          << ". kartin yerlerini degistirmek istiyor musunuz?";
 

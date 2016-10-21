@@ -18,13 +18,17 @@ private:
 public:
     Kart();
 
+    Kart(const Kart&);
+
     ~Kart();
 
     Kart &operator=(const Kart &);
 
-    Sembol *alSembol();
+    char alKarakter() const;
 
-    void serbestBirak();
+    int alRenk() const;
+
+    void semboluBirak();
 };
 
 #endif

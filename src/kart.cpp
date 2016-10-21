@@ -13,6 +13,10 @@ Kart::Kart() {
     kartSembolu = new Sembol();
 }
 
+Kart::Kart(const Kart &kart) {
+    kartSembolu = kart.kartSembolu;
+}
+
 Kart::~Kart() {
     delete kartSembolu;
 };
@@ -23,10 +27,14 @@ Kart &Kart::operator=(const Kart &kart) {
     return *this;
 }
 
-Sembol *Kart::alSembol() {
-    return kartSembolu;
+char Kart::alKarakter() const {
+    return kartSembolu->alKarakter();
 }
 
-void Kart::serbestBirak() {
+int Kart::alRenk() const {
+    return kartSembolu->alRenk();
+}
+
+void Kart::semboluBirak() {
     kartSembolu = 0;
 }

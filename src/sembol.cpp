@@ -7,9 +7,9 @@
 * @author Emirhan Aydın (g141210018@sakarya.edu.tr)
 */
 
-#include "sembol.h"
 #include <windows.h>
 #include <time.h>
+#include "sembol.h"
 
 Sembol::Sembol() {
     static bool randBesleme = false;
@@ -23,10 +23,10 @@ Sembol::Sembol() {
     renk = rand() % 15 + 1;
 }
 
-char Sembol::alKarakter() {
+char Sembol::alKarakter() const {
     return karakter;
 }
 
-int Sembol::alRenk() {
+int Sembol::alRenk() const {
     return renk;
 }

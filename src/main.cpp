@@ -69,9 +69,8 @@ int main() {
         cout << endl;
         Sembol *sembol;
         for (int i = 0; i < kartAdedi; i++) {
-            sembol = kartlar[i].alSembol();
-            Konsol::yaziRengi(sembol->alRenk());
-            cout << "  |" << sembol->alKarakter() << setw(4) << "|";
+            Konsol::yaziRengi(kartlar[i].alRenk());
+            cout << "  |" << kartlar[i].alKarakter() << setw(4) << "|";
         }
         Konsol::yaziRengi();
         cout << endl << endl << endl;
@@ -347,6 +346,36 @@ bool onayMenusu() {
     return secenek == 0;
 }
 
+/**
+ * Gönderilen dizide verilen iki farklı konumdaki kartların yerlerini değiştirir.
+ * @param kartlar Üzerinde değiştirme işlemi yapılacak olan kart dizisi
+ * @param ilk İlk kartın dizideki konumu
+ * @param ikinci İkinci kartın dizideki konumu
+ * @param geciciKart Kullanılacak olan geçici Kart nesnesi parametre olarak da gönderilebilir.
+ */
+void kartTakasi(Kart kartlar[], int ilk, int ikinci, Kart *geciciKart = 0) {
+    Kart *gecici;
+//    Parametre olarak geçici Kart nesnesi gönderilmişse geçici göstericisi buna atanır.
+    if (geciciKart == 0)
+        gecici = new Kart(kartlar[ilk]);
+//    Geçici Kart nesnesi gönderilmişse bu Kart nesnesi ilk konumdaki kartın verilerini alır.
+    else {
+        *geciciKart = kartlar[ilk];
+        gecici = geciciKart;
+    }
+//    Oluşturulan geçici Kart nesnesi kullanılarak basit bir tersleme algoritması ile dizi terslenir.
+//    Dizide adres değişimi yapılmamıştır, yalnızca nesnelerin verileri geçici nesne tarafından tutularak diğerine
+//    aktarılır.
+    kartlar[ilk] = kartlar[ikinci];
+    kartlar[ikinci] = *gecici;
+//    Kullanılan geçici Kart nesnesi parametre olarak gönderilmemişse işlem sonunda Sembol göstericisi sıfırlanır
+//    ve bellekten silinir.
+    if (geciciKart == 0) {
+        gecici->semboluBirak();
+        delete gecici;
+    }
+}
+
 void kartYerDegistir(Kart kartlar[], int kartAdedi) {
     int ilkSecim, ikinciSecim;
 
@@ -363,12 +392,7 @@ void kartYerDegistir(Kart kartlar[], int kartAdedi) {
     if (!onayMenusu())
         return;
 
-    Kart *gecici = new Kart();
-    *gecici = kartlar[ilkSecim];
-    kartlar[ilkSecim] = kartlar[ikinciSecim];
-    kartlar[ikinciSecim] = *gecici;
-    gecici->serbestBirak();
-    delete gecici;
+    kartTakasi(kartlar, ilkSecim, ikinciSecim);
 }
 
 /**
@@ -385,17 +409,14 @@ void kartlariTersCevir(Kart kartlar[], int kartAdedi) {
     if (!onayMenusu())
         return;
 
-    Kart *gecici = new Kart(); // O anki konumdaki kartın bilgilerini tutmak için oluşturulmuş geçici nesne.
-//    Oluşturulan geçici Kart nesnesi kullanılarak basit bir tersleme algoritması ile dizi terslenir.
-//    Dizide adres değişimi yapılmamıştır, yalnızca nesnelerin verileri geçici nesne tarafından tutularak diğerine
-//    aktarılır.
-    for (int i = 0, j = kartAdedi - 1, bitis = kartAdedi / 2; i < bitis; i++, j--) {
-        *gecici = kartlar[i];
-        kartlar[i] = kartlar[j];
-        kartlar[j] = *gecici;
-    }
+    Kart *gecici = new Kart(kartlar[0]); // O anki konumdaki kartın bilgilerini tutmak için oluşturulmuş geçici nesne.
+
+    int i = 0, j = kartAdedi - 1, bitis = kartAdedi / 2;
+    while (i < bitis)
+        kartTakasi(kartlar, i++, j--, gecici);
+
 //    Geçici kart nesnesinin gösterdiği veriler dizide en son okunan kart nesnesinin verileri olacağından
 //    kart silinmeden önce bu veriler ile bağlantısı kesilir. Bu sayede kart silinirken gösterdiği alanlar da silinmez.
-    gecici->serbestBirak();
+    gecici->semboluBirak();
     delete gecici;
 }

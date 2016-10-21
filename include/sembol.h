@@ -17,9 +17,9 @@ private:
 public:
     Sembol();
 
-    int alRenk();
+    int alRenk() const;
 
-    char alKarakter();
+    char alKarakter() const;
 };
 
 #endif

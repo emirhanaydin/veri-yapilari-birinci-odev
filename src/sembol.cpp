@@ -1,6 +1,6 @@
 /**
 * @file sembol.cpp
-* @description İçerisinde sembol karakteri ve renk verisi barındırır.
+* @description Açıklama ilgili başlık dosyasında yapılmıştır.
 * @course 2A
 * @assignment 1
 * @date 5.10.2016
@@ -14,6 +14,7 @@
 Sembol::Sembol() {
     static bool randBesleme = false;
 
+//    Rand fonksiyonu için daha önce zaman beslemesi yapılmamış ile şimdi yapılır.
     if (!randBesleme) {
         randBesleme = true;
         srand(time(0));

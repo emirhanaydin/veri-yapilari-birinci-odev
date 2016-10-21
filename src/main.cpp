@@ -1,7 +1,7 @@
 /**
 * @file main.cpp
 * @description Kart dizisi üzerinde işlemlerin yapıldığı, kullanıcının gerçek zamanlı olarak etkileşime geçebileceği
- * seçenek yapısının tanımlandığı programın kaynak dosyası.
+ * seçenek yapısının tanımlandığı, programın kaynak dosyası.
 * @course 2A
 * @assignment 1
 * @date 5.10.2016
@@ -27,7 +27,7 @@ void menuBilgiSil(int);
 
 void dikeySecim(string[], int, int &);
 
-bool onayMenusu();
+bool onayMenusu(int);
 
 void kartYerDegistir(Kart[], int);
 
@@ -101,8 +101,8 @@ int main() {
             cout << "  ";
             Konsol::imleciTasi(2, 9);
             cout << "Programdan cikmak istediginizden emin misiniz?";
-            Konsol::imleciTasi(2, 12);
-            if (onayMenusu()) {
+
+            if (onayMenusu(2)) {
                 system("CLS");
                 break;
             }
@@ -339,7 +339,18 @@ void kartYeriSec(Kart kartlar[], int kartAdedi, int &ilkSecim, int oncekiSecim =
     ilkSecim = konum;
 }
 
-bool onayMenusu() {
+/**
+ * Ana menüde seçilmiş olan seçeneğin konumuna bağlı olarak kullanıcıya Evet - Hayır seçenekli onay menüsünü sunar.
+ * @param secenekSirasi Seçilen ana menü seçeneğinin kaçıncı seçenek olduğunu belirtir. (0'dan başlayarak)
+ * @return Evet yanıtı alınırsa true, Hayır alınırsa false döndürülür.
+ */
+bool onayMenusu(int secenekSirasi) {
+    int ilkSatir = Konsol::alImlecY() - 4 + secenekSirasi;
+    int sonSatir = ilkSatir + 7 - secenekSirasi;
+//    Seçilmiş olan ana menü seçeneğinin başına gider ve '>' seçim göstericisini siler.
+    Konsol::imleciTasi(0, ilkSatir);
+    cout << "  ";
+    Konsol::imleciTasi(2, sonSatir);
     string secenekler[] = {"Evet", "Hayir"};
     int secenek = 0;
     dikeySecim(secenekler, 2, secenek);
@@ -376,8 +387,14 @@ void kartTakasi(Kart kartlar[], int ilk, int ikinci, Kart *geciciKart = 0) {
     }
 }
 
+/**
+ * Gönderilen kart dizisinin belirtilen iki elemanının yerlerini değiştirir.
+ * @param kartlar Üzerinde işlem yapılacak olan Kart dizisi
+ * @param kartAdedi Kart dizisi uzunluğu
+ */
 void kartYerDegistir(Kart kartlar[], int kartAdedi) {
     int ilkSecim, ikinciSecim;
+    int konumY = Konsol::alImlecY();
 
     kartYeriSec(kartlar, kartAdedi, ilkSecim);
     menuBilgiSil(2);
@@ -388,8 +405,7 @@ void kartYerDegistir(Kart kartlar[], int kartAdedi) {
     cout << "  " << ilkSecim + 1 << ". kart ile " << ikinciSecim + 1
          << ". kartin yerlerini degistirmek istiyor musunuz?";
 
-    cout << endl << endl << endl;
-    if (!onayMenusu())
+    if (!onayMenusu(0))
         return;
 
     kartTakasi(kartlar, ilkSecim, ikinciSecim);
@@ -405,11 +421,13 @@ void kartlariTersCevir(Kart kartlar[], int kartAdedi) {
     cout << "  ";
     Konsol::imleciTasi(2, 9);
     cout << "Kart dizisini tersine cevirmek istiyor musunuz?";
-    cout << endl << endl << endl;
-    if (!onayMenusu())
+
+    if (!onayMenusu(1))
         return;
 
     Kart *gecici = new Kart(kartlar[0]); // O anki konumdaki kartın bilgilerini tutmak için oluşturulmuş geçici nesne.
+// Başlangıçta dizinin ilk elemanının Sembol nesnesini gösterir. Geçici Kart nesnesinin kendine ait bir Sembol nesnesi
+// oluşturmasının önüne geçmek için yapılmıştır.
 
     int i = 0, j = kartAdedi - 1, bitis = kartAdedi / 2;
     while (i < bitis)

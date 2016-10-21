@@ -1,6 +1,6 @@
 /**
 * @file kart.cpp
-* @description Her bir kart içerisinde bir adet sembol nesnesinin adresini tutar.
+* @description Açıklama ilgili başlık dosyasında yapılmıştır.
 * @course 2A
 * @assignment 1
 * @date 5.10.2016
@@ -18,8 +18,9 @@ Kart::Kart(const Kart &kart) {
 }
 
 Kart::~Kart() {
-    delete kartSembolu;
-};
+    if(kartSembolu != 0)
+        delete kartSembolu;
+}
 
 Kart &Kart::operator=(const Kart &kart) {
     kartSembolu = kart.kartSembolu;

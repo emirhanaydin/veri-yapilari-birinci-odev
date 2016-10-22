@@ -1,13 +1,19 @@
 CC=g++
-INCL=./include
-SRC=./src
-LIB=./lib
-BIN=./bin
+BIN=bin
+INCL=include
+LIB=lib
+SRC=src
 EXE=main
 
-all: gen-libs compile run
+all: make_dirs gen_libs compile run
 
-gen-libs: main.o sembol.o kart.o konsol.o
+make_dirs:
+	IF NOT EXIST $(BIN) (MD "$(BIN)")
+	IF NOT EXIST $(INCL) (MD "$(INCL)")
+	IF NOT EXIST $(LIB) (MD "$(LIB)")
+	IF NOT EXIST $(SRC) (MD "$(SRC)")
+
+gen_libs: main.o sembol.o kart.o konsol.o
 
 compile:
 	$(CC) $(LIB)/main.o $(LIB)/sembol.o $(LIB)/kart.o $(LIB)/konsol.o -o $(BIN)/$(EXE)
@@ -28,5 +34,5 @@ konsol.o:
 	$(CC) -I $(INCL) -c $(SRC)/konsol.cpp -o $(LIB)/konsol.o
 	
 clean:
-	del "$(BIN)\$(EXE).exe"
-	del "$(LIB)\*.o"
+	DEL "$(BIN)\$(EXE).exe"
+	DEL "$(LIB)\*.o"

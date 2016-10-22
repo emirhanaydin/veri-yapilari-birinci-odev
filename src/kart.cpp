@@ -18,7 +18,7 @@ Kart::Kart(const Kart &kart) {
 }
 
 Kart::~Kart() {
-    if(kartSembolu != 0)
+    if (kartSembolu != 0)
         delete kartSembolu;
 }
 

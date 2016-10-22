@@ -22,7 +22,7 @@ public:
     /**
      * Parametre olarak gönderilen Kart nesnesine ait Sembol nesnesi yerel Sembol göstericisine atanır.
      */
-    Kart(const Kart&);
+    Kart(const Kart &);
 
     ~Kart();
 
